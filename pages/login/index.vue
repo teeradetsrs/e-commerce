@@ -35,16 +35,15 @@
           Register
         </NuxtLink>
 
-        <div class="tw-grid tw-grid-cols-3">
-          <v-btn
-            class="tw-col-start-2"
-            :loading="loading"
-            text="Submit"
-            type="submit"
-            block
-            rounded="xl"
-          ></v-btn>
-        </div>
+        <div class="tw-grid tw-place-content-center">
+           <v-btn
+             :loading="loading"
+             text="Login"
+             type="submit"
+             block
+             rounded="xl"
+           ></v-btn>
+         </div>
       </v-form>
     </div>
     <div class="tw-flex tw-justify-center tw-items-center">
@@ -54,9 +53,9 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  layout: false,
-});
+// definePageMeta({
+//   layout: false,
+// });
 
 const userName = ref("");
 const password = ref("");

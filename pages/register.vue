@@ -35,16 +35,15 @@
           rounded
         ></v-text-field>
 
-        <div class="tw-grid tw-grid-cols-3">
-          <v-btn
-          class="tw-col-start-2"
-            :loading="loading"
-            text="Submit"
-            type="submit"
-            block
-            rounded="xl"
-          ></v-btn>
-        </div>
+        <div class="tw-grid tw-place-content-center">
+           <v-btn
+             :loading="loading"
+             text="Register"
+             type="submit"
+             block
+             rounded="xl"
+           ></v-btn>
+         </div>
       </v-form>
     </div>
   </div>

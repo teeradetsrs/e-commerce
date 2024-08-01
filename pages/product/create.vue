@@ -58,25 +58,25 @@
           rounded
         ></v-text-field>
 
-        <div class="tw-grid tw-grid-cols-3">
-          <v-btn
-            class="tw-col-start-2"
-            :loading="loading"
-            text="Create Product"
-            type="submit"
-            block
-            rounded="xl"
-          ></v-btn>
-        </div>
+        <div class="tw-grid tw-place-content-center">
+           <v-btn
+             :loading="loading"
+             text="Create Product"
+             type="submit"
+             block
+             rounded="xl"
+           ></v-btn>
+         </div>
+
       </v-form>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  layout: false,
-});
+// definePageMeta({
+//   layout: false,
+// });
 
 const userName = ref("");
 const password = ref("");

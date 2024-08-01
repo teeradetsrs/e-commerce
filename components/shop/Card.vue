@@ -18,7 +18,7 @@
     </div>
 
     <v-card class="tw-space-x-5" variant="text">
-      <v-btn type="submit" variant="outlined"> Edit </v-btn>
+      <v-btn type="submit" variant="outlined">       <NuxtLink :to="`/shop/${prop.id}`" no-rel> Edit </NuxtLink> </v-btn>
       <v-btn type="submit" variant="outlined"> delete </v-btn>
     </v-card>
   </v-card>
@@ -26,6 +26,7 @@
 
 <script setup lang="ts">
 const prop = defineProps<{
+  id: number,
   img: string;
   name: string;
   price: number;
