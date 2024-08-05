@@ -16,16 +16,20 @@
       <NuxtLink to="/product/create" no-rel> Add </NuxtLink>
     </v-btn>
     <div class="tw-justify-items-center tw-grid">
-      <ShopCard :id="1" :img="'ff'" :name="'test'" :price="30" :stock="30" />
+      <ShopCard :shop-list="shop.shopData.data.content" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-
+import { useShops } from "~/stores/shop"
+import { onBeforeMount } from 'vue';
 const userName = ref("");
 const password = ref("");
 const loading = ref(false);
+const config = useRuntimeConfig()
+const shop = useShops();
+const dataShop:any = ref({})
 
 const ruleUsername = ref([
   (v: string) => !!v || "Username is required",
@@ -45,4 +49,10 @@ function submit(username: string, password: string) {
 
   navigateTo("/");
 }
+
+
+onBeforeMount( async () => {
+  await shop.getShop()
+  // dataShop.value = await shop.shopData
+})
 </script>

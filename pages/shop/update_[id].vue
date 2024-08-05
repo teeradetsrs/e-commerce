@@ -7,13 +7,12 @@
   </button>
   <div class="tw-h-screen tw-bg-indigo-400 tw-grid tw-items-center">
     <div class="tw-flex tw-flex-col tw-items-center tw-space-y-5">
-      <h1 class="tw-text-3xl tw-font-bold tw-text-white">Create Shop</h1>
+      <h1 class="tw-text-3xl tw-font-bold tw-text-white">Edit Shop</h1>
       <v-form
         validate-on="submit lazy"
         @submit.prevent="submit()"
         class="tw-w-4/12 tw-space-y-5"
       >
-      {{ name }}
         <v-text-field
           v-model="name"
           :rules="ruleUsername"
@@ -22,7 +21,7 @@
           hide-details
           rounded
         ></v-text-field>
-{{  desc }}
+
         <v-text-field
           v-model="desc"
           :rules="ruleUsername"
@@ -33,7 +32,7 @@
         ></v-text-field>
 
         <v-file-input
-          v-model="image"
+        v-model="image"
           prepend-icon=""
           accept="image/*"
           label="Shop Image"
@@ -45,7 +44,7 @@
         <div class="tw-grid tw-place-content-center">
           <v-btn
             :loading="loading"
-            text="Create Shop"
+            text="Edit Shop"
             type="submit"
             block
             rounded="xl"
@@ -57,28 +56,34 @@
 </template>
 
 <script setup lang="ts">
-import { useShops } from "~/stores/shop";
+import { useShops } from "~/stores/shop"
 
-//   definePageMeta({
-//     layout: false,
-//   });
-
-const userName = ref("");
-const password = ref("");
-const loading = ref(false);
+//    definePageMeta({
+//      layout: false,
+//    });
 
 const shop = useShops();
+const route = useRoute()
 
-const name = ref("")
-const desc = ref("")
-const image = ref()
-const userId = ref(4)
+const name = ref("");
+const desc = ref("");
+const image = ref();
+const userId = ref(4);
 
+const loading = ref(false);
+// const timeout: null;
 const ruleUsername = ref([
   (v: string) => !!v || "Username is required",
   (v: string) =>
     (v && v.length >= 8) || "Username must be more than 8 characters",
 ]);
+
+onBeforeMount( async () => {
+  await shop.getShopById(route.params.id)
+  name.value = shop.shop.name
+  desc.value = shop.shop.description
+  image.value = shop.shop.image
+})
 
 async function submit() {
   loading.value = true;
@@ -90,10 +95,11 @@ async function submit() {
     UserId: userId.value,
   });
 
-  console.log("Shop Body", shopBody.value);
-
-  await shop.createShop(shopBody.value);
-  
+    await shop.editShop(route.params.id, shopBody);
   loading.value = false;
+
+  //  alert(JSON.stringify(results, null, 2));
+
+  //  navigateTo("/");
 }
 </script>
