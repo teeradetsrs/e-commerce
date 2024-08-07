@@ -13,7 +13,8 @@ export const useShops = defineStore("Shops", () => {
   const shop = ref({
     name: "",
     description: "",
-    image: null
+    image: null,
+    ShopId: 0
   });
 
   // const shopBody = ref({
@@ -24,7 +25,7 @@ export const useShops = defineStore("Shops", () => {
   // });
 
   async function getShop() {
-    const { data } = await useFetch(`${config.public.apiBase}/shop`, {
+    const { data } = await useFetch(`${config.public.apiBase}/Shop`, {
       onRequest({ request, options }) {},
       onResponse({ request, response, options }) {
         shopData.value.data.content = response._data;
@@ -33,7 +34,7 @@ export const useShops = defineStore("Shops", () => {
   }
 
   async function getShopById(id) {
-    const { data } = await useFetch(`${config.public.apiBase}/shop/${id}`, {
+    const { data } = await useFetch(`${config.public.apiBase}/Shop/${id}`, {
       onRequest({ request, options }) {},
       onResponse({ request, response, options }) {
         shop.value = response._data;
@@ -42,7 +43,7 @@ export const useShops = defineStore("Shops", () => {
   }
 
   async function createShop(shopBody) {
-    const { data } = await useFetch(`${config.public.apiBase}/shop`, {
+    const { data } = await useFetch(`${config.public.apiBase}/Shop`, {
       method: 'POST',
       body: shopBody,
       onResponse({ request, response, options }) {
@@ -52,7 +53,7 @@ export const useShops = defineStore("Shops", () => {
   }
 
   async function deleteShop(id){
-    const { data } = await useFetch(`${config.public.apiBase}/shop/${id}`, {
+    const { data } = await useFetch(`${config.public.apiBase}/Shop/${id}`, {
       method: 'DELETE',
       onResponse({ request, response, options }) {
         console.log("Delete", response);
@@ -61,7 +62,7 @@ export const useShops = defineStore("Shops", () => {
   }
 
   async function editShop(id, shopBody){
-    const { data } = await useFetch(`${config.public.apiBase}/shop/${id}`, {
+    const { data } = await useFetch(`${config.public.apiBase}/Shop/${id}`, {
       method: 'PUT',
       body: shopBody,
       onResponse({ request, response, options }) {

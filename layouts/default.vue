@@ -10,9 +10,9 @@
           <NuxtLink to="/shop" no-rel> My Shop </NuxtLink>
         </v-btn>
 
-        <v-btn>
+        <!-- <v-btn>
           <NuxtLink to="/shop/create" no-rel> Create Shop </NuxtLink>
-        </v-btn>
+        </v-btn> -->
 
         <v-spacer></v-spacer>
 

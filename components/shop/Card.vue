@@ -1,6 +1,6 @@
 <template>
   <v-card
-    class="tw-flex tw-flex-row tw-space-x-5 tw-items-center tw-w-8/12 tw-p-2 tw-my-5"
+    class="tw-grid tw-grid-cols-3 tw-space-x-5 tw-items-center tw-w-8/12 tw-p-2 tw-my-5"
     v-for="(data, index) in shopList"
     :key="index"
   >

@@ -10,11 +10,11 @@
       <h1 class="tw-text-3xl tw-font-bold tw-text-white">Create Product</h1>
       <v-form
         validate-on="submit lazy"
-        @submit.prevent="submit(userName, password)"
+        @submit.prevent="submit()"
         class="tw-w-4/12 tw-space-y-5"
       >
         <v-text-field
-          v-model="userName"
+          v-model="name"
           :rules="ruleUsername"
           label="Name"
           variant="solo"
@@ -23,7 +23,7 @@
         ></v-text-field>
 
         <v-text-field
-          v-model="password"
+          v-model="description"
           :rules="ruleUsername"
           label="Description"
           variant="solo"
@@ -32,6 +32,7 @@
         ></v-text-field>
 
         <v-file-input
+          v-model="image"
           prepend-icon=""
           accept="image/*"
           label="Product Image"
@@ -41,7 +42,7 @@
         ></v-file-input>
 
         <v-text-field
-          v-model="password"
+          v-model="price"
           :rules="ruleUsername"
           label="Price"
           variant="solo"
@@ -50,7 +51,7 @@
         ></v-text-field>
 
         <v-text-field
-          v-model="password"
+          v-model="stock"
           :rules="ruleUsername"
           label="Stock"
           variant="solo"
@@ -59,21 +60,22 @@
         ></v-text-field>
 
         <div class="tw-grid tw-place-content-center">
-           <v-btn
-             :loading="loading"
-             text="Create Product"
-             type="submit"
-             block
-             rounded="xl"
-           ></v-btn>
-         </div>
-
+          <v-btn
+            :loading="loading"
+            text="Create Product"
+            type="submit"
+            block
+            rounded="xl"
+          ></v-btn>
+        </div>
       </v-form>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useProducts } from "~/stores/product";
+
 // definePageMeta({
 //   layout: false,
 // });
@@ -81,24 +83,37 @@
 const userName = ref("");
 const password = ref("");
 const loading = ref(false);
-// const timeout: null;
+
+const shopId = ref(1);
+const name = ref('');
+const description = ref('');
+const image = ref();
+const price = ref(0);
+const stock = ref(0);
+
+const product = useProducts();
+
 const ruleUsername = ref([
   (v: string) => !!v || "Username is required",
   (v: string) =>
     (v && v.length >= 8) || "Username must be more than 8 characters",
 ]);
 
-function submit(username: string, password: string) {
+async function submit() {
   loading.value = true;
 
-  const results = {
-    username,
-    password,
-  };
+  product.createProductBody.description = description.value;
+  product.createProductBody.name = name.value;
+  product.createProductBody.shopId = shopId.value;
+  product.createProductBody.price = price.value;
+  product.createProductBody.stock = stock.value;
+  product.createProductBody.image = image.value;
+
+  await product.createProduct();
 
   loading.value = false;
 
-  alert(JSON.stringify(results, null, 2));
+  // alert(JSON.stringify(results, null, 2));
 
   navigateTo("/");
 }

@@ -13,7 +13,7 @@
         <v-icon color="success"></v-icon>
       </template>
 
-      <NuxtLink to="/product/create" no-rel> Add </NuxtLink>
+      <NuxtLink to="/shop/create" no-rel> Add </NuxtLink>
     </v-btn>
     <div class="tw-justify-items-center tw-grid">
       <ShopCard :shop-list="shop.shopData.data.content" />
@@ -24,11 +24,13 @@
 <script setup lang="ts">
 import { useShops } from "~/stores/shop"
 import { onBeforeMount } from 'vue';
+
 const userName = ref("");
 const password = ref("");
 const loading = ref(false);
-const config = useRuntimeConfig()
+
 const shop = useShops();
+
 const dataShop:any = ref({})
 
 const ruleUsername = ref([

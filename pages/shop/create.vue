@@ -13,7 +13,7 @@
         @submit.prevent="submit()"
         class="tw-w-4/12 tw-space-y-5"
       >
-      {{ name }}
+  
         <v-text-field
           v-model="name"
           :rules="ruleUsername"
@@ -22,7 +22,7 @@
           hide-details
           rounded
         ></v-text-field>
-{{  desc }}
+
         <v-text-field
           v-model="desc"
           :rules="ruleUsername"
@@ -72,7 +72,7 @@ const shop = useShops();
 const name = ref("")
 const desc = ref("")
 const image = ref()
-const userId = ref(4)
+const username = ref('alice_w')
 
 const ruleUsername = ref([
   (v: string) => !!v || "Username is required",
@@ -87,7 +87,7 @@ async function submit() {
     Name: name.value,
     Description: desc.value,
     image: image.value,
-    UserId: userId.value,
+    Username: username.value,
   });
 
   console.log("Shop Body", shopBody.value);

@@ -7,7 +7,7 @@
   </button>
   <div class="tw-h-screen tw-bg-indigo-400 tw-grid tw-items-center">
     <div class="tw-flex tw-flex-col tw-items-center tw-space-y-5">
-      <h1 class="tw-text-3xl tw-font-bold tw-text-white">Edit Shop</h1>
+      <h1 class="tw-text-3xl tw-font-bold tw-text-white">Update Product</h1>
       <v-form
         validate-on="submit lazy"
         @submit.prevent="submit()"
@@ -23,7 +23,7 @@
         ></v-text-field>
 
         <v-text-field
-          v-model="desc"
+          v-model="description"
           :rules="ruleUsername"
           label="Description"
           variant="solo"
@@ -35,16 +35,34 @@
           v-model="image"
           prepend-icon=""
           accept="image/*"
-          label="Shop Image"
+          label="Product Image"
           variant="solo"
           hide-details
           rounded
         ></v-file-input>
 
+        <v-text-field
+          v-model="price"
+          :rules="ruleUsername"
+          label="Price"
+          variant="solo"
+          hide-details
+          rounded
+        ></v-text-field>
+
+        <v-text-field
+          v-model="stock"
+          :rules="ruleUsername"
+          label="Stock"
+          variant="solo"
+          hide-details
+          rounded
+        ></v-text-field>
+
         <div class="tw-grid tw-place-content-center">
           <v-btn
             :loading="loading"
-            text="Edit Shop"
+            text="Create Product"
             type="submit"
             block
             rounded="xl"
@@ -56,55 +74,48 @@
 </template>
 
 <script setup lang="ts">
-import { useShops } from "~/stores/shop";
+import { useProducts } from "~/stores/product";
 
-//    definePageMeta({
-//      layout: false,
-//    });
+// definePageMeta({
+//   layout: false,
+// });
 
-const shop = useShops();
+const userName = ref("");
+const password = ref("");
+const loading = ref(false);
+
+const shopId = ref(1);
+const name = ref('');
+const description = ref('');
+const image = ref();
+const price = ref(0);
+const stock = ref(0);
+
+const product = useProducts();
 const route = useRoute();
 
-const name = ref("");
-const desc = ref("");
-const image = ref();
-const username = ref("alice_w");
-const shopId = ref(0);
-
-const loading = ref(false);
-// const timeout: null;
 const ruleUsername = ref([
   (v: string) => !!v || "Username is required",
   (v: string) =>
     (v && v.length >= 8) || "Username must be more than 8 characters",
 ]);
 
-onBeforeMount(async () => {
-  await shop.getShopById(route.params.id);
-  name.value = shop.shop.name;
-  desc.value = shop.shop.description;
-  image.value = shop.shop.image;
-  // shopId.value = shop.shop.ShopId;
-});
-
 async function submit() {
   loading.value = true;
 
-  const shopBody = ref({
-    Name: name.value,
-    Description: desc.value,
-    image: image.value,
-    Username: username.value,
-    ShopId: route.params.id,
-  });
+  product.editProductBody.description = description.value;
+  product.editProductBody.name = name.value;
+  product.editProductBody.productId = Number(route.params.id);
+  product.editProductBody.price = price.value;
+  product.editProductBody.stock = stock.value;
+  product.editProductBody.image = image.value;
 
-  await shop.editShop(route.params.id, shopBody);
-  await shop.getShop();
+  await product.editProduct(route.params.id);
 
   loading.value = false;
 
-  //  alert(JSON.stringify(results, null, 2));
+  // alert(JSON.stringify(results, null, 2));
 
-  navigateTo("/shop");
+  navigateTo("/");
 }
 </script>
