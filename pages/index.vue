@@ -1,11 +1,19 @@
 <template>
- <h1 class="tw-text-3xl tw-font-bold tw-text-white tw-text-center tw-my-5">
+  <h1 class="tw-text-3xl tw-font-bold tw-text-white tw-text-center tw-my-5">
     All Product
   </h1>
 
   <div class="tw-justify-items-center tw-grid">
-      <ProductCard :product-list="product.allProductData.data.content" />
-    </div>
+    <ProductCard :product-list="product.allProductData.data.content" />
+  </div>
+
+  <v-pagination
+    @update:model-value="changePage"
+    v-model="pageNumber"
+    :length="product.allProductData.data.pageable.totalPages"
+    :total-visible="7"
+    circle
+  ></v-pagination>
 </template>
 
 <script setup lang="ts">
@@ -23,9 +31,16 @@ const ruleUsername = ref([
     (v && v.length >= 8) || "Username must be more than 8 characters",
 ]);
 
-onBeforeMount( async () => {
-  await product.getProduct()
-})
+const pageNumber = ref(0);
+
+onBeforeMount(async () => {
+  await product.getProduct(
+    product.productData.data.pageable.currentPage,
+    product.productData.data.pageable.sizePages
+  );
+
+  pageNumber.value = product.productData.data.pageable.currentPage;
+});
 
 function submit(username: string, password: string) {
   loading.value = true;
@@ -39,7 +54,14 @@ function submit(username: string, password: string) {
 
   // alert(JSON.stringify(results, null, 2));
 
-  navigateTo('/login')
+  navigateTo("/login");
+}
+
+async function changePage(pageNumber: number) {
+  await product.getProduct(
+    pageNumber,
+    product.productData.data.pageable.sizePages
+  );
 }
 
 // function checkApi(userName: string) {

@@ -3,7 +3,7 @@ import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   build: {
     transpile: ['vuetify'],
   },
@@ -37,4 +37,9 @@ export default defineNuxtConfig({
       apiBaseAUTH: ''
     }
   },
+  devServer: {
+    host: '0',
+    port: 3000
+  },
+  ssr: false
 })

@@ -39,7 +39,16 @@
           variant="solo"
           hide-details
           rounded
+           @update:model-value="updateImage()"
         ></v-file-input>
+
+        <div class="tw-flex tw-justify-center" v-if="imagesBase64 != ''">
+          <v-img
+            width="150"
+            height="120"
+            :src="`data:image/jpeg;base64,${imagesBase64}`"
+          ></v-img>
+        </div>
 
         <v-text-field
           v-model="price"
@@ -90,6 +99,7 @@ const description = ref('');
 const image = ref();
 const price = ref(0);
 const stock = ref(0);
+const imagesBase64 = ref("");
 
 const product = useProducts();
 
@@ -107,7 +117,7 @@ async function submit() {
   product.createProductBody.shopId = shopId.value;
   product.createProductBody.price = price.value;
   product.createProductBody.stock = stock.value;
-  product.createProductBody.image = image.value;
+  product.createProductBody.image = imagesBase64.value;
 
   await product.createProduct();
 
@@ -116,5 +126,31 @@ async function submit() {
   // alert(JSON.stringify(results, null, 2));
 
   navigateTo("/");
+}
+
+async function updateImage() {
+  if (image.value != null) {
+    const base64Image = await toBase64(image.value);
+    imagesBase64.value = base64Image;
+  } else {
+    imagesBase64.value = "";
+  }
+}
+
+function toBase64(file: File) {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+
+    reader.onload = () => {
+      const result = reader.result;
+      if (typeof result === "string") {
+        resolve(result.split(",")[1]); // Remove the data URL prefix
+      } else {
+        reject(new Error("FileReader result is not a string"));
+      }
+    };
+    reader.onerror = (error) => reject(error);
+  });
 }
 </script>

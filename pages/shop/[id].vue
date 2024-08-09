@@ -24,6 +24,14 @@
     <div class="tw-justify-items-center tw-grid">
       <ProductCard :product-list="product.productData.data.content" />
     </div>
+
+  <v-pagination
+    @update:model-value="changePage"
+    v-model="pageNumber"
+    :length="product.productData.data.pageable.totalPages"
+    :total-visible="7"
+    circle
+  ></v-pagination>
   </div>
 </template>
 
@@ -37,7 +45,7 @@ const loading = ref(false);
 const shop = useShops();
 const product = useProducts();
 
-const dataShop:any = ref({})
+const pageNumber = ref(0);
 
 // const router = useRouter();
 const route = useRoute()
@@ -50,4 +58,12 @@ onBeforeMount( async () => {
   await product.getProductsByShopId(Number(route.params.id))
   
 })
+
+async function changePage(pageNumber: number) {
+  await product.getProductsByShopId(
+    Number(route.params.id),
+    pageNumber,
+    product.productData.data.pageable.sizePages
+  );
+}
 </script>

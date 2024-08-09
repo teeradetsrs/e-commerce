@@ -5,7 +5,6 @@
     <div class="tw-flex tw-flex-col tw-items-center tw-space-y-5">
       <h1 class="tw-text-3xl tw-font-bold tw-text-white">Login</h1>
       <v-form
-        validate-on="submit lazy"
         @submit.prevent="submit()"
         class="tw-w-7/12 tw-space-y-5"
       >
@@ -14,36 +13,29 @@
           :rules="ruleUsername"
           label="Username"
           variant="solo"
-          hide-details
           rounded
         ></v-text-field>
 
         <v-text-field
           v-model="password"
-          :rules="ruleUsername"
+          :rules="rulePassword"
           label="Password"
           variant="solo"
-          hide-details
           rounded
+          type="password"
         ></v-text-field>
 
-        <NuxtLink
+        <div>
+          <NuxtLink
           to="/register"
           no-rel
           class="tw-text-white tw-underline tw-flex tw-justify-end"
-        >
+          >
           Register
         </NuxtLink>
+      </div>
 
         <div class="tw-grid tw-place-content-center">
-          <!-- <v-btn
-            :loading="loading"
-            text="Login"
-            type="submit"
-            block
-            rounded="xl"
-          ></v-btn> -->
-
           <v-dialog max-width="500">
             <template v-slot:activator="{ props: activatorProps }">
               <v-btn
@@ -55,6 +47,7 @@
                 block
                 rounded="xl"
                 type="submit"
+                :disabled="isSubmitDisabled"
               ></v-btn>
             </template>
 
@@ -79,17 +72,17 @@
 
                 <div class="tw-flex tw-justify-center">
                   <v-btn
-                  :loading="validating"
-                  class="mt-6 bg-surface-variant tw-items-center"
-                  height="40"
-                  text="Validate"
-                  variant="plain"
-                  width="135"
-                  rounded
-                  @click="onClick"
-                ></v-btn>
+                    :loading="validating"
+                    class="mt-6 bg-surface-variant tw-items-center"
+                    height="40"
+                    text="Validate"
+                    variant="plain"
+                    width="135"
+                    rounded
+                    :disabled="otp.length < 6"
+                    @click="onClick"
+                  ></v-btn>
                 </div>
-               
               </v-card>
             </template>
           </v-dialog>
@@ -126,16 +119,33 @@ const ruleUsername = ref([
     (v && v.length >= 8) || "Username must be more than 8 characters",
 ]);
 
+const rulePassword = ref([
+  (v: string) => !!v || "Password is required",
+  (v: string) =>
+    (v && v.length >= 8) || "Password must be more than 8 characters",
+]);
+
+const isSubmitDisabled = computed(() => {
+  const usernameValid = ruleUsername.value.every(
+    (rule) => rule(userName.value) === true
+  );
+  const passwordValid = rulePassword.value.every(
+    (rule) => rule(password.value) === true
+  );
+
+  return usernameValid || passwordValid;
+});
+
 async function submit() {
   validating.value = true;
 
   auth.loginBody.username = userName.value;
   auth.loginBody.password = password.value;
-  
+
   await auth.generateOTP();
 
   validating.value = false;
-  
+
   // alert(JSON.stringify(results, null, 2));
 
   // navigateTo("/");
@@ -147,10 +157,14 @@ async function onClick() {
   auth.generateTokenBody.otp = otp.value;
   auth.generateTokenBody.username = userName.value;
 
-  await auth.generateToken();
+  try {
+    await auth.generateToken();
+  } catch {
+    alert("invalid OTP");
+  }
 
   validating.value = false;
-  
+
   navigateTo("/");
 
   // setTimeout(() => {
@@ -158,3 +172,12 @@ async function onClick() {
   // }, 2000);
 }
 </script>
+
+<style scoped>
+/* Custom styles for disabled button */
+.v-btn--disabled {
+  background-color: grey !important;
+  color: white !important;
+  border: 1px solid darkgrey !important;
+}
+</style>

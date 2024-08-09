@@ -3,35 +3,64 @@
     My Shop
   </h1>
   <div>
-    <v-btn
-      prepend-icon="mdi-plus-thick"
-      class="tw-w-1/12 tw-mx-5"
-      :loading="loading"
-      type="submit"
-    >
-      <template v-slot:prepend>
-        <v-icon color="success"></v-icon>
-      </template>
+    <div class="tw-grid tw-grid-cols-6">
+      <div class="tw-col-start-5  tw-justify-self-end ">
+        <NuxtLink to="/shop/create" no-rel>
+          <v-btn
+            prepend-icon="mdi-plus-thick"
+            class="tw-w-full"
+            :loading="loading"
+            type="submit"
+          >
+            <template v-slot:prepend>
+              <v-icon color="success"></v-icon>
+            </template>
+            Add
+          </v-btn>
+        </NuxtLink>
+      </div>
+    </div>
 
-      <NuxtLink to="/shop/create" no-rel> Add </NuxtLink>
-    </v-btn>
     <div class="tw-justify-items-center tw-grid">
       <ShopCard :shop-list="shop.shopData.data.content" />
+      <v-pagination
+        @update:model-value="changePage"
+        v-model="pageNumber"
+        :length="shop.shopData.data.pageable.totalPages"
+        :total-visible="7"
+        circle
+      ></v-pagination>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useShops } from "~/stores/shop"
-import { onBeforeMount } from 'vue';
+import { useShops } from "~/stores/shop";
+import { useAuthentication } from "~/stores/authentication";
+import { onBeforeMount } from "vue";
+
+interface page {
+  currentPage: number;
+  sizePages: number;
+  totalPages: number;
+}
+
+const shop = useShops();
+const auth = useAuthentication();
 
 const userName = ref("");
 const password = ref("");
 const loading = ref(false);
 
-const shop = useShops();
+// const pageable = ref<page>({
+//   currentPage: 0,
+//   sizePages: 10,
+//   totalPages: 0
+// });
 
-const dataShop:any = ref({})
+const token = auth.token
+
+const pageNumber = ref(0);
 
 const ruleUsername = ref([
   (v: string) => !!v || "Username is required",
@@ -52,9 +81,12 @@ function submit(username: string, password: string) {
   navigateTo("/");
 }
 
+onBeforeMount(async () => {
+  await shop.getShop(1, 10);
+  pageNumber.value = shop.shopData.data.pageable.currentPage;
+});
 
-onBeforeMount( async () => {
-  await shop.getShop()
-  // dataShop.value = await shop.shopData
-})
+async function changePage(pageNumber: number) {
+  await shop.getShop(pageNumber, shop.shopData.data.pageable.sizePages);
+}
 </script>

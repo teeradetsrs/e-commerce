@@ -2,13 +2,13 @@
   <v-card>
     <v-layout>
       <v-app-bar class="tw-bg-white" prominent>
-        <v-btn>
-          <NuxtLink to="/" no-rel> All Product </NuxtLink>
-        </v-btn>
+        <NuxtLink to="/" no-rel>
+          <v-btn> All Product </v-btn>
+        </NuxtLink>
 
-        <v-btn>
-          <NuxtLink to="/shop" no-rel> My Shop </NuxtLink>
-        </v-btn>
+        <NuxtLink to="/shop" no-rel>
+          <v-btn> My Shop </v-btn>
+        </NuxtLink>
 
         <!-- <v-btn>
           <NuxtLink to="/shop/create" no-rel> Create Shop </NuxtLink>
@@ -16,15 +16,20 @@
 
         <v-spacer></v-spacer>
 
-        <template v-if="$vuetify.display.mdAndUp">
-          <v-btn>
-            <NuxtLink to="/login" no-rel> Login </NuxtLink>
-          </v-btn>
+        <template v-if="!auth.statusLogin">
+          <NuxtLink to="/login" no-rel>
+            <v-btn> Login </v-btn>
+          </NuxtLink>
 
-          <v-btn variant="text">
-            <NuxtLink to="/register" no-rel> Register </NuxtLink>
-          </v-btn>
+          <NuxtLink to="/register" no-rel>
+            <v-btn variant="text"> Register </v-btn>
+          </NuxtLink>
         </template>
+
+        <template v-if="auth.statusLogin">
+            <v-btn @click="logout()"> Logout </v-btn>
+        </template>
+
       </v-app-bar>
 
       <v-main class="tw-bg-indigo-400">
@@ -37,5 +42,14 @@
 </template>
 
 <script setup lang="ts">
+import { useAuthentication } from "~/stores/authentication";
+
 const drawer = ref(false);
+
+const auth = useAuthentication();
+
+async function logout() {
+  localStorage.clear()
+  auth.statusLogin = false
+}
 </script>

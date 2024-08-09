@@ -39,7 +39,16 @@
           variant="solo"
           hide-details
           rounded
+          @update:model-value="updateImage()"
         ></v-file-input>
+
+        <div class="tw-flex tw-justify-center" v-if="imagesBase64 != ''">
+          <v-img
+            width="150"
+            height="120"
+            :src="`data:image/jpeg;base64,${imagesBase64}`"
+          ></v-img>
+        </div>
 
         <v-text-field
           v-model="price"
@@ -62,7 +71,7 @@
         <div class="tw-grid tw-place-content-center">
           <v-btn
             :loading="loading"
-            text="Create Product"
+            text="Update Product"
             type="submit"
             block
             rounded="xl"
@@ -76,29 +85,39 @@
 <script setup lang="ts">
 import { useProducts } from "~/stores/product";
 
-// definePageMeta({
-//   layout: false,
-// });
+const product = useProducts();
+const route = useRoute();
 
-const userName = ref("");
-const password = ref("");
 const loading = ref(false);
 
 const shopId = ref(1);
-const name = ref('');
-const description = ref('');
+const name = ref("");
+const description = ref("");
 const image = ref();
+const imagesBase64 = ref("");
 const price = ref(0);
 const stock = ref(0);
-
-const product = useProducts();
-const route = useRoute();
 
 const ruleUsername = ref([
   (v: string) => !!v || "Username is required",
   (v: string) =>
     (v && v.length >= 8) || "Username must be more than 8 characters",
 ]);
+
+onBeforeMount(async () => {
+  await product.getProductById(route.params.id);
+  name.value = product.productDataDetail.name;
+  description.value = product.productDataDetail.description;
+  price.value = product.productDataDetail.price;
+  stock.value = product.productDataDetail.stock;
+  shopId.value = product.productDataDetail.shopId;
+  image.value = product.productDataDetail.imageName;
+  if (product.productDataDetail.image != null) {
+    // console.log("LOGGG SET UP", product.productDataDetail.image);
+
+    imagesBase64.value = product.productDataDetail.image;
+  }
+});
 
 async function submit() {
   loading.value = true;
@@ -108,14 +127,39 @@ async function submit() {
   product.editProductBody.productId = Number(route.params.id);
   product.editProductBody.price = price.value;
   product.editProductBody.stock = stock.value;
-  product.editProductBody.image = image.value;
-
+  product.editProductBody.image = imagesBase64.value;
+  product.editProductBody.shopId = shopId.value;
+  product.editProductBody.imageName = image.value.name
   await product.editProduct(route.params.id);
 
   loading.value = false;
 
-  // alert(JSON.stringify(results, null, 2));
-
   navigateTo("/");
+}
+
+async function updateImage() {
+  if (image.value != null) {
+    const base64Image = await toBase64(image.value);
+    imagesBase64.value = base64Image;
+  } else {
+    imagesBase64.value = "";
+  }
+}
+
+function toBase64(file: File) {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+
+    reader.onload = () => {
+      const result = reader.result;
+      if (typeof result === "string") {
+        resolve(result.split(",")[1]); // Remove the data URL prefix
+      } else {
+        reject(new Error("FileReader result is not a string"));
+      }
+    };
+    reader.onerror = (error) => reject(error);
+  });
 }
 </script>
