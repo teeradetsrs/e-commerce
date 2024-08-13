@@ -5,12 +5,13 @@
   <div>
     <div class="tw-grid tw-grid-cols-6">
       <div class="tw-col-start-5  tw-justify-self-end ">
-        <NuxtLink to="/shop/create" no-rel>
+        <NuxtLink to="/shop/create" no-rel v-if="!disableAdd">
           <v-btn
             prepend-icon="mdi-plus-thick"
             class="tw-w-full"
             :loading="loading"
             type="submit"
+            :disabled="disableAdd"
           >
             <template v-slot:prepend>
               <v-icon color="success"></v-icon>
@@ -52,13 +53,17 @@ const userName = ref("");
 const password = ref("");
 const loading = ref(false);
 
+const token = ref();
+
+const disableAdd = ref(true);
+
 // const pageable = ref<page>({
 //   currentPage: 0,
 //   sizePages: 10,
 //   totalPages: 0
 // });
 
-const token = auth.token
+// const token = auth.token
 
 const pageNumber = ref(0);
 
@@ -84,6 +89,13 @@ function submit(username: string, password: string) {
 onBeforeMount(async () => {
   await shop.getShop(1, 10);
   pageNumber.value = shop.shopData.data.pageable.currentPage;
+
+  token.value = localStorage.getItem("access_token");
+  console.log(token.value);
+  
+  if(token.value != null){
+    disableAdd.value = false;
+  }
 });
 
 async function changePage(pageNumber: number) {

@@ -66,14 +66,15 @@ export const useProducts = defineStore("Products", () => {
   });
 
   async function getProduct(pageNumber, pageSize) {
+    console.log("Token", token.value);
     const { data } = await $fetch(`${config.public.apiBase}/Product`, {
       method: "GET",
       params: {
         pageNumber: pageNumber,
         pageSize: pageSize,
       },
-      headers:  {
-        Authorization: `Bearer ${token.value.access_token}`
+      headers: {
+        Authorization: `Bearer ${token.value.access_token}`,
       },
       onResponse({ request, response, options }) {
         console.log("GET", response);
@@ -84,12 +85,12 @@ export const useProducts = defineStore("Products", () => {
   }
 
   async function getProductById(id) {
-    const { data } = await useFetch(
+    const { data } = await $fetch(
       `${config.public.apiBase}/Product/detail/${id}`,
       {
         method: "GET",
-        headers:  {
-          Authorization: `Bearer ${token.value.access_token}`
+        headers: {
+          Authorization: `Bearer ${token.value.access_token}`,
         },
         onResponse({ request, response, options }) {
           productDataDetail.value = response._data;
@@ -100,7 +101,7 @@ export const useProducts = defineStore("Products", () => {
   }
 
   async function getProductsByShopId(shopId, pageNumber, pageSize) {
-    const { data } = await useFetch(
+    const { data } = await $fetch(
       `${config.public.apiBase}/Product/${shopId}`,
       {
         method: "GET",
@@ -108,8 +109,8 @@ export const useProducts = defineStore("Products", () => {
           pageNumber: pageNumber,
           pageSize: pageSize,
         },
-        headers:  {
-          Authorization: `Bearer ${token.value.access_token}`
+        headers: {
+          Authorization: `Bearer ${token.value.access_token}`,
         },
         onResponse({ request, response, options }) {
           console.log("GET Product by Shop Id", response);
@@ -121,11 +122,11 @@ export const useProducts = defineStore("Products", () => {
   }
 
   async function createProduct() {
-    const { data } = await useFetch(`${config.public.apiBase}/Product`, {
+    const { data } = await $fetch(`${config.public.apiBase}/Product`, {
       method: "POST",
       body: createProductBody.value,
-      headers:  {
-        Authorization: `Bearer ${token.value.access_token}`
+      headers: {
+        Authorization: `Bearer ${token.value.access_token}`,
       },
       onResponse({ request, response, options }) {
         console.log("Create", response);
@@ -134,11 +135,11 @@ export const useProducts = defineStore("Products", () => {
   }
 
   async function editProduct(id) {
-    const { data } = await useFetch(`${config.public.apiBase}/Product/${id}`, {
+    const { data } = await $fetch(`${config.public.apiBase}/Product/${id}`, {
       method: "PUT",
       body: editProductBody.value,
-      headers:  {
-        Authorization: `Bearer ${token.value.access_token}`
+      headers: {
+        Authorization: `Bearer ${token.value.access_token}`,
       },
       onResponse({ request, response, options }) {
         console.log("Edit", response);

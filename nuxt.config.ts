@@ -41,5 +41,10 @@ export default defineNuxtConfig({
     host: '0',
     port: 3000
   },
-  ssr: false
+  ssr: false,
+  app: {
+    head:{
+      title:'E-Commerce',
+    },
+  },
 })

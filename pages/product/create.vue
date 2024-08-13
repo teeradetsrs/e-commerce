@@ -14,7 +14,6 @@
       >
         <v-text-field
           v-model="name"
-          :rules="ruleUsername"
           label="Name"
           variant="solo"
           rounded
@@ -104,6 +103,11 @@ const rulePrice= ref([
 const ruleStock= ref([
   (v: number) => !!v || "Stock is required",
 ]);
+
+onBeforeMount( async () => {
+  shopId.value = Number(localStorage.getItem("shopId"));
+  console.log(shopId.value);
+})
 
 async function submit() {
   loading.value = true;

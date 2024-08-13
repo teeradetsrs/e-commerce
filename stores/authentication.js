@@ -53,7 +53,7 @@ export const useAuthentication = defineStore("Users", () => {
   }
 
   async function generateOTP() {
-    const { data } = await useFetch(`http://192.168.0.80:7098/GenerateOtp`, {
+    const { data } = await useFetch(`${config.public.apiBaseAUTH}/GenerateOtp`, {
       method: "POST",
       params: {
         username: loginBody.value.username,
@@ -72,7 +72,7 @@ export const useAuthentication = defineStore("Users", () => {
   }
 
   async function generateToken() {
-    const { data } =  useFetch(`http://192.168.0.80:7098/GenerateToken`, {
+    const { data } =  useFetch(`${config.public.apiBaseAUTH}/GenerateToken`, {
       method: "POST",
       body: generateTokenBody.value,
       onResponse({ request, response, options }) {

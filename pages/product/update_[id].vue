@@ -15,7 +15,6 @@
       >
         <v-text-field
           v-model="name"
-          :rules="ruleUsername"
           label="Name"
           variant="solo"
           hide-details
@@ -24,7 +23,6 @@
 
         <v-text-field
           v-model="description"
-          :rules="ruleUsername"
           label="Description"
           variant="solo"
           hide-details
@@ -52,7 +50,7 @@
 
         <v-text-field
           v-model="price"
-          :rules="ruleUsername"
+          :rules="rulePrice"
           label="Price"
           variant="solo"
           hide-details
@@ -61,7 +59,7 @@
 
         <v-text-field
           v-model="stock"
-          :rules="ruleUsername"
+          :rules="ruleStock"
           label="Stock"
           variant="solo"
           hide-details
@@ -98,12 +96,20 @@ const imagesBase64 = ref("");
 const price = ref(0);
 const stock = ref(0);
 
-const ruleUsername = ref([
-  (v: string) => !!v || "Username is required",
-  (v: string) =>
-    (v && v.length >= 8) || "Username must be more than 8 characters",
+// const ruleUsername = ref([
+//   (v: string) => !!v || "Username is required",
+//   (v: string) =>
+//     (v && v.length >= 8) || "Username must be more than 8 characters",
+// ]);
+
+const rulePrice= ref([
+  (v: number) => !!v || "Price is required",
+  (v: number) => v != 0 || "Price can not be 0",
 ]);
 
+const ruleStock= ref([
+  (v: number) => !!v || "Stock is required",
+]);
 onBeforeMount(async () => {
   await product.getProductById(route.params.id);
   name.value = product.productDataDetail.name;
@@ -112,6 +118,7 @@ onBeforeMount(async () => {
   stock.value = product.productDataDetail.stock;
   shopId.value = product.productDataDetail.shopId;
   image.value = product.productDataDetail.imageName;
+  console.log("🚀 ~ onBeforeMount ~ product.productDataDetail.imageName;:", product.productDataDetail.imageName)
   if (product.productDataDetail.image != null) {
     // console.log("LOGGG SET UP", product.productDataDetail.image);
 
@@ -121,7 +128,7 @@ onBeforeMount(async () => {
 
 async function submit() {
   loading.value = true;
-
+  
   product.editProductBody.description = description.value;
   product.editProductBody.name = name.value;
   product.editProductBody.productId = Number(route.params.id);
@@ -129,7 +136,8 @@ async function submit() {
   product.editProductBody.stock = stock.value;
   product.editProductBody.image = imagesBase64.value;
   product.editProductBody.shopId = shopId.value;
-  product.editProductBody.imageName = image.value.name
+  product.editProductBody.imageName = image.value.name != null ? image.value.name : product.productDataDetail.imageName
+  console.log("🚀 ~ submit ~ image.value.name:", image.value.name)
   await product.editProduct(route.params.id);
 
   loading.value = false;

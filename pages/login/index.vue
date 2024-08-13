@@ -22,7 +22,9 @@
           label="Password"
           variant="solo"
           rounded
-          type="password"
+          :type="showPassword ? 'text' : 'password'"
+          :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+          @click:append-inner="showPassword = !showPassword"
         ></v-text-field>
 
         <div>
@@ -95,6 +97,7 @@
                     rounded
                     :disabled="otp.length < 6"
                     @click="onClick"
+                    v-on:keyup.enter="onClick" 
                   ></v-btn>
                 </div>
               </v-card>
@@ -116,6 +119,8 @@ import { useAuthentication } from "~/stores/authentication";
 //   layout: false,
 // });
 
+const auth = useAuthentication();
+
 const userName = ref("");
 const password = ref("");
 const chatId = ref("");
@@ -127,7 +132,7 @@ const loading = ref(false);
 
 const dialog = ref(false)
 
-const auth = useAuthentication();
+const showPassword = ref(false);
 
 const ruleUsername = ref([
   (v: string) => !!v || "Username is required",

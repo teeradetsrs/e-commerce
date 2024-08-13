@@ -14,7 +14,6 @@
       >
         <v-text-field
           v-model="name"
-          :rules="ruleName"
           label="Name"
           variant="solo"
           rounded
@@ -52,7 +51,6 @@
             type="submit"
             block
             rounded="xl"
-            :disabled="isSubmitDisabled"
           ></v-btn>
         </div>
       </v-form>
@@ -70,7 +68,8 @@ const name = ref("");
 const desc = ref("");
 const image = ref();
 const imagesBase64 = ref();
-const username = ref("alice_w");
+const username = ref();
+const imageName = ref();
 
 const loading = ref(false);
 
@@ -80,15 +79,17 @@ const ruleName = ref([
     (v && v.length >= 8) || "Name must be more than 8 characters",
 ]);
 
-const isSubmitDisabled = computed(() => {
-  const nameValid = ruleName.value.every(rule => rule(name.value) === true);
-  return !nameValid;
-});
+// const isSubmitDisabled = computed(() => {
+//   const nameValid = ruleName.value.every(rule => rule(name.value) === true);
+//   return !nameValid;
+// });
 
 onBeforeMount(async () => {
   await shop.getShopById(route.params.id);
   name.value = shop.shop.name;
   desc.value = shop.shop.description;
+
+  username.value = localStorage.getItem("username");
 
   if (shop.shop.image != null) {
     imagesBase64.value = shop.shop.image;
@@ -96,7 +97,7 @@ onBeforeMount(async () => {
     
     // image.value = shop.shop
     // image.value = null
-    // imageName.value = shop.shop.imageName
+    imageName.value = shop.shop.imageName
     // console.log("Image name", image.value.imageName);
   }
 });
@@ -111,7 +112,7 @@ async function submit() {
       Image: imagesBase64.value,
       Username: username.value,
       ShopId: Number(route.params.id),
-      ImageName: image.value.name
+      ImageName: shop.shop.imageName
     });
     console.log("shopBody", shopBody);
 

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { useAuthentication } from "./authentication"
+import { useAuthentication } from "./authentication";
 
 export const useShops = defineStore("Shops", () => {
   const config = useRuntimeConfig();
@@ -7,8 +7,8 @@ export const useShops = defineStore("Shops", () => {
 
   const token = ref({
     access_token: localStorage.getItem("access_token"),
-    refresh_token: localStorage.getItem("refresh_token")
-  })
+    refresh_token: localStorage.getItem("refresh_token"),
+  });
 
   const shopData = ref({
     data: {
@@ -16,7 +16,7 @@ export const useShops = defineStore("Shops", () => {
       pageable: {
         currentPage: 1,
         sizePages: 10,
-        totalPages: 0
+        totalPages: 0,
       },
     },
   });
@@ -26,7 +26,7 @@ export const useShops = defineStore("Shops", () => {
     description: "",
     image: null,
     shopId: 0,
-    imageName: ""
+    imageName: "",
   });
 
   // const shopBody = ref({
@@ -42,8 +42,8 @@ export const useShops = defineStore("Shops", () => {
         pageNumber: pageNumber,
         pageSize: pageSize,
       },
-      headers:  {
-        Authorization: `Bearer ${token.value.access_token}`
+      headers: {
+        Authorization: `Bearer ${token.value.access_token}`,
       },
       onResponse({ request, response, options }) {
         shopData.value.data.content = response._data.content;
@@ -54,8 +54,8 @@ export const useShops = defineStore("Shops", () => {
 
   async function getShopById(id) {
     const { data } = await $fetch(`${config.public.apiBase}/Shop/${id}`, {
-      headers:  {
-        Authorization: `Bearer ${token.value.access_token}`
+      headers: {
+        Authorization: `Bearer ${token.value.access_token}`,
       },
       onResponse({ request, response, options }) {
         shop.value = response._data;
@@ -64,11 +64,11 @@ export const useShops = defineStore("Shops", () => {
   }
 
   async function createShop(shopBody) {
-    const { data } = await useFetch(`${config.public.apiBase}/Shop`, {
-      method: 'POST',
+    const { data } = await $fetch(`${config.public.apiBase}/Shop`, {
+      method: "POST",
       body: shopBody,
-      headers:  {
-        Authorization: `Bearer ${token.value.access_token}`
+      headers: {
+        Authorization: `Bearer ${token.value.access_token}`,
       },
       onResponse({ request, response, options }) {
         console.log("Create", response);
@@ -77,11 +77,11 @@ export const useShops = defineStore("Shops", () => {
     });
   }
 
-  async function deleteShop(id){
-    const { data } = await useFetch(`${config.public.apiBase}/Shop/${id}`, {
-      method: 'DELETE',
-      headers:  {
-        Authorization: `Bearer ${token.value.access_token}`
+  async function deleteShop(id) {
+    const { data } = await $fetch(`${config.public.apiBase}/Shop/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token.value.access_token}`,
       },
       onResponse({ request, response, options }) {
         console.log("Delete", response);
@@ -89,17 +89,17 @@ export const useShops = defineStore("Shops", () => {
     });
   }
 
-  async function editShop(id, shopBody){
+  async function editShop(id, shopBody) {
     const { data } = await $fetch(`${config.public.apiBase}/Shop/${id}`, {
-      method: 'PUT',
+      method: "PUT",
       body: shopBody,
-      headers:  {
-        Authorization: `Bearer ${token.value.access_token}`
+      headers: {
+        Authorization: `Bearer ${token.value.access_token}`,
       },
       onResponse({ request, response, options }) {
         console.log("shopBody", shopBody);
         console.log("Edit", response);
-        getShop(1,10);
+        getShop(1, 10);
       },
     });
   }
@@ -111,6 +111,6 @@ export const useShops = defineStore("Shops", () => {
     shop,
     createShop,
     deleteShop,
-    editShop
+    editShop,
   };
 });

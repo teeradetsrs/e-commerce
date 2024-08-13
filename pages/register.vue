@@ -10,7 +10,9 @@
           rounded></v-text-field>
 
         <v-text-field v-model="password" :rules="rulePassword" label="Password" variant="solo" rounded
-          type="password"></v-text-field>
+        :type="showPassword ? 'text' : 'password'"
+          :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+          @click:append-inner="showPassword = !showPassword"></v-text-field>
 
         <v-text-field v-model="chatId" :rules="ruleChatId" label="ChatID" variant="solo" 
           rounded></v-text-field>
@@ -44,6 +46,8 @@ const chatId = ref("");
 const roles = ref([])
 
 const loading = ref(false);
+
+const showPassword = ref(false);
 
 const router = useRouter();
 

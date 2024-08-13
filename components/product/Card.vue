@@ -1,6 +1,6 @@
 <template> 
   <v-card
-    class="tw-grid tw-grid-cols-3 tw-space-x-5 tw-items-center tw-w-8/12 tw-p-2 tw-my-5"
+    class="tw-grid lg:tw-grid-cols-3 md:tw-grid-cols-1 tw-gap-5 tw-items-center tw-w-8/12 tw-p-2 tw-my-5"
     v-for="(data, index) in productList"
   >
     <div class="tw-flex tw-justify-center tw-items-center">
@@ -11,7 +11,7 @@
       ></v-img>
     </div>
 
-    <div class="tw-grid tw-grid-cols-2">
+    <div :class="['tw-grid tw-grid-cols-2 tw-gap-x-5 tw-items-center tw-mx-5', disableAdd ? 'tw-col-span-2' : '']">
       <div class="tw-overflow-auto tw-max-h-20 tw-min-h-20">
         <span class="tw-font-bold"> Name: </span>
         <div>
@@ -42,8 +42,9 @@
     </div>
     
     <v-card
-      class="tw-space-x-5 tw-grid tw-grid-cols-2 tw-min-w-1/2 tw-max-w-1/2"
+      class="tw-grid tw-grid-cols-2 tw-gap-x-5 tw-min-w-1/2 tw-max-w-1/2"
       variant="text"
+      v-if="!disableAdd"
     >
       <NuxtLink :to="`/product/update_${data.productId}`" no-rel>
         <v-btn type="submit" variant="outlined" class="tw-w-full">
@@ -72,4 +73,19 @@ defineProps({
     require: true,
   },
 });
+
+const token = ref();
+
+const disableAdd = ref(true);
+
+onBeforeMount(async () => {
+ 
+  token.value = localStorage.getItem("access_token");
+  console.log(token.value);
+  
+  if(token.value != null){
+    disableAdd.value = false;
+  }
+});
+
 </script>
