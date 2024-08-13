@@ -5,6 +5,11 @@ export const useShops = defineStore("Shops", () => {
   const config = useRuntimeConfig();
   const auth = useAuthentication();
 
+  const token = ref({
+    access_token: localStorage.getItem("access_token"),
+    refresh_token: localStorage.getItem("refresh_token")
+  })
+
   const shopData = ref({
     data: {
       content: [],
@@ -38,7 +43,7 @@ export const useShops = defineStore("Shops", () => {
         pageSize: pageSize,
       },
       headers:  {
-        Authorization: `Bearer ${auth.token.access_token}`
+        Authorization: `Bearer ${token.value.access_token}`
       },
       onResponse({ request, response, options }) {
         shopData.value.data.content = response._data.content;
@@ -50,7 +55,7 @@ export const useShops = defineStore("Shops", () => {
   async function getShopById(id) {
     const { data } = await $fetch(`${config.public.apiBase}/Shop/${id}`, {
       headers:  {
-        Authorization: `Bearer ${auth.token.access_token}`
+        Authorization: `Bearer ${token.value.access_token}`
       },
       onResponse({ request, response, options }) {
         shop.value = response._data;
@@ -63,7 +68,7 @@ export const useShops = defineStore("Shops", () => {
       method: 'POST',
       body: shopBody,
       headers:  {
-        Authorization: `Bearer ${auth.token.access_token}`
+        Authorization: `Bearer ${token.value.access_token}`
       },
       onResponse({ request, response, options }) {
         console.log("Create", response);
@@ -76,7 +81,7 @@ export const useShops = defineStore("Shops", () => {
     const { data } = await useFetch(`${config.public.apiBase}/Shop/${id}`, {
       method: 'DELETE',
       headers:  {
-        Authorization: `Bearer ${auth.token.access_token}`
+        Authorization: `Bearer ${token.value.access_token}`
       },
       onResponse({ request, response, options }) {
         console.log("Delete", response);
@@ -89,7 +94,7 @@ export const useShops = defineStore("Shops", () => {
       method: 'PUT',
       body: shopBody,
       headers:  {
-        Authorization: `Bearer ${auth.token.access_token}`
+        Authorization: `Bearer ${token.value.access_token}`
       },
       onResponse({ request, response, options }) {
         console.log("shopBody", shopBody);

@@ -5,6 +5,11 @@ export const useProducts = defineStore("Products", () => {
   const config = useRuntimeConfig();
   const auth = useAuthentication();
 
+  const token = ref({
+    access_token: localStorage.getItem("access_token"),
+    refresh_token: localStorage.getItem("refresh_token")
+  })
+
   const createProductBody = ref({
     shopId: 0,
     name: "",
@@ -61,14 +66,14 @@ export const useProducts = defineStore("Products", () => {
   });
 
   async function getProduct(pageNumber, pageSize) {
-    const { data } = await useFetch(`${config.public.apiBase}/Product`, {
+    const { data } = await $fetch(`${config.public.apiBase}/Product`, {
       method: "GET",
       params: {
         pageNumber: pageNumber,
         pageSize: pageSize,
       },
       headers:  {
-        Authorization: `Bearer ${auth.token.access_token}`
+        Authorization: `Bearer ${token.value.access_token}`
       },
       onResponse({ request, response, options }) {
         console.log("GET", response);
@@ -84,11 +89,11 @@ export const useProducts = defineStore("Products", () => {
       {
         method: "GET",
         headers:  {
-          Authorization: `Bearer ${auth.token.access_token}`
+          Authorization: `Bearer ${token.value.access_token}`
         },
         onResponse({ request, response, options }) {
           productDataDetail.value = response._data;
-          console.log("VALUEEE", productData.value);
+          console.log("🚀 ~ onResponse ~  productDataDetail.value:",  productDataDetail.value)
         },
       }
     );
@@ -104,7 +109,7 @@ export const useProducts = defineStore("Products", () => {
           pageSize: pageSize,
         },
         headers:  {
-          Authorization: `Bearer ${auth.token.access_token}`
+          Authorization: `Bearer ${token.value.access_token}`
         },
         onResponse({ request, response, options }) {
           console.log("GET Product by Shop Id", response);
@@ -120,7 +125,7 @@ export const useProducts = defineStore("Products", () => {
       method: "POST",
       body: createProductBody.value,
       headers:  {
-        Authorization: `Bearer ${auth.token.access_token}`
+        Authorization: `Bearer ${token.value.access_token}`
       },
       onResponse({ request, response, options }) {
         console.log("Create", response);
@@ -133,7 +138,7 @@ export const useProducts = defineStore("Products", () => {
       method: "PUT",
       body: editProductBody.value,
       headers:  {
-        Authorization: `Bearer ${auth.token.access_token}`
+        Authorization: `Bearer ${token.value.access_token}`
       },
       onResponse({ request, response, options }) {
         console.log("Edit", response);

@@ -81,10 +81,14 @@ async function submit() {
   auth.registerBody.Password = password.value;
   auth.registerBody.Roles = roles.value;
 
-  await auth.register();
-  loading.value = false;
-
-  navigateTo("/login");
+  try{
+    await auth.register();
+    loading.value = false;
+    navigateTo("/login");
+  }catch{
+    loading.value = false;
+    console.log("🚀 ~ submit ~ loading.value :", loading.value )
+  }
 }
 </script>
 

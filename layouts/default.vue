@@ -48,8 +48,17 @@ const drawer = ref(false);
 
 const auth = useAuthentication();
 
+onBeforeMount( async () => {
+  const token = localStorage.getItem("access_token")
+  
+  if(token != null){
+    auth.statusLogin = true
+  }
+})
+
 async function logout() {
   localStorage.clear()
   auth.statusLogin = false
+  navigateTo("/login");
 }
 </script>

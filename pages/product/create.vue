@@ -9,7 +9,6 @@
     <div class="tw-flex tw-flex-col tw-items-center tw-space-y-5">
       <h1 class="tw-text-3xl tw-font-bold tw-text-white">Create Product</h1>
       <v-form
-        validate-on="submit lazy"
         @submit.prevent="submit()"
         class="tw-w-4/12 tw-space-y-5"
       >
@@ -18,16 +17,13 @@
           :rules="ruleUsername"
           label="Name"
           variant="solo"
-          hide-details
           rounded
         ></v-text-field>
 
         <v-text-field
           v-model="description"
-          :rules="ruleUsername"
           label="Description"
           variant="solo"
-          hide-details
           rounded
         ></v-text-field>
 
@@ -37,7 +33,6 @@
           accept="image/*"
           label="Product Image"
           variant="solo"
-          hide-details
           rounded
            @update:model-value="updateImage()"
         ></v-file-input>
@@ -52,19 +47,17 @@
 
         <v-text-field
           v-model="price"
-          :rules="ruleUsername"
           label="Price"
+          :rules="rulePrice"
           variant="solo"
-          hide-details
           rounded
         ></v-text-field>
 
         <v-text-field
           v-model="stock"
-          :rules="ruleUsername"
           label="Stock"
+          :rules="ruleStock"
           variant="solo"
-          hide-details
           rounded
         ></v-text-field>
 
@@ -85,12 +78,8 @@
 <script setup lang="ts">
 import { useProducts } from "~/stores/product";
 
-// definePageMeta({
-//   layout: false,
-// });
+const product = useProducts();
 
-const userName = ref("");
-const password = ref("");
 const loading = ref(false);
 
 const shopId = ref(1);
@@ -101,12 +90,19 @@ const price = ref(0);
 const stock = ref(0);
 const imagesBase64 = ref("");
 
-const product = useProducts();
-
 const ruleUsername = ref([
   (v: string) => !!v || "Username is required",
   (v: string) =>
     (v && v.length >= 8) || "Username must be more than 8 characters",
+]);
+
+const rulePrice= ref([
+  (v: number) => !!v || "Price is required",
+  (v: number) => v != 0 || "Price can not be 0",
+]);
+
+const ruleStock= ref([
+  (v: number) => !!v || "Stock is required",
 ]);
 
 async function submit() {
@@ -122,9 +118,7 @@ async function submit() {
   await product.createProduct();
 
   loading.value = false;
-
-  // alert(JSON.stringify(results, null, 2));
-
+  
   navigateTo("/");
 }
 

@@ -71,12 +71,12 @@ const name = ref("");
 const desc = ref("");
 const image = ref();
 const imagesBase64 = ref('');
-const username = ref("alice_w");
+const username = localStorage.getItem("username");
 
 const ruleName = ref([
   (v: string) => !!v || "Name is required",
-  (v: string) =>
-    (v && v.length >= 8) || "Name must be more than 8 characters",
+  // (v: string) =>
+  //   (v && v.length >= 8) || "Name must be more than 8 characters",
 ]);
 
 const isSubmitDisabled = computed(() => {
@@ -98,7 +98,7 @@ async function submit() {
         Name: name.value,
         Description: desc.value,
         Image: imagesBase64,
-        Username: username.value,
+        Username: username,
         ImageName: image.value.name
       });
 

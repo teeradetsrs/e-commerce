@@ -35,12 +35,26 @@
         </NuxtLink>
       </div>
 
+      <div class="tw-grid tw-place-content-center ">
+          <v-btn
+            class="tw-bg-white tw-text-black tw-px-10"
+            color="surface-variant"
+            text="Login"
+            variant="flat"
+            block
+            rounded="xl"
+            type="submit"
+            :disabled="isSubmitDisabled"
+            :loading="validating"
+          ></v-btn>
+        </div>
+
         <div class="tw-grid tw-place-content-center">
-          <v-dialog max-width="500">
-            <template v-slot:activator="{ props: activatorProps }">
+          <v-dialog max-width="500" v-model="dialog">
+            <!-- <template v-slot:activator="{ props: activatorProps }">
               <v-btn
-                class="tw-bg-white tw-text-black"
                 v-bind="activatorProps"
+                class="tw-bg-white tw-text-black"
                 color="surface-variant"
                 text="Login"
                 variant="flat"
@@ -49,7 +63,7 @@
                 type="submit"
                 :disabled="isSubmitDisabled"
               ></v-btn>
-            </template>
+            </template> -->
 
             <template v-slot:default="{ isActive }">
               <v-card
@@ -111,6 +125,8 @@ const validating = ref(false);
 
 const loading = ref(false);
 
+const dialog = ref(false)
+
 const auth = useAuthentication();
 
 const ruleUsername = ref([
@@ -133,7 +149,7 @@ const isSubmitDisabled = computed(() => {
     (rule) => rule(password.value) === true
   );
 
-  return usernameValid || passwordValid;
+  return !usernameValid || !passwordValid;
 });
 
 async function submit() {
@@ -142,9 +158,21 @@ async function submit() {
   auth.loginBody.username = userName.value;
   auth.loginBody.password = password.value;
 
-  await auth.generateOTP();
-
-  validating.value = false;
+  try{
+    await auth.generateOTP();
+    if(auth.statusLogin === false){
+      dialog.value = false;
+      console.log("🚀 ~ submit ~ dialog.value:", dialog.value)
+      validating.value = false;
+      return
+    }
+    dialog.value = true;
+    validating.value = false;
+    return
+  }catch {
+    dialog.value = false;
+    console.log("🚀 ~ submit ~ dialog.value 123:", dialog.value)
+  }
 
   // alert(JSON.stringify(results, null, 2));
 
@@ -157,6 +185,8 @@ async function onClick() {
   auth.generateTokenBody.otp = otp.value;
   auth.generateTokenBody.username = userName.value;
 
+  localStorage.setItem("username", userName.value);
+  
   try {
     await auth.generateToken();
   } catch {
