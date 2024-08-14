@@ -2,7 +2,6 @@
   <h1 class="tw-text-3xl tw-font-bold tw-text-white tw-text-center tw-my-5">
     All Product
   </h1>
-
   <div class="tw-justify-items-center tw-grid">
     <ProductCard :product-list="product.allProductData.data.content" />
   </div>
@@ -18,12 +17,10 @@
 
 <script setup lang="ts">
 import { useProducts } from "~/stores/product";
-
-const userName = ref("");
-const password = ref("");
 const loading = ref(false);
 
 const product = useProducts();
+const signalr = useSignalr();
 
 const ruleUsername = ref([
   (v: string) => !!v || "Username is required",

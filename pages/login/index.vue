@@ -97,7 +97,6 @@
                     rounded
                     :disabled="otp.length < 6"
                     @click="onClick"
-                    v-on:keyup.enter="onClick" 
                   ></v-btn>
                 </div>
               </v-card>

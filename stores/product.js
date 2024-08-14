@@ -80,6 +80,7 @@ export const useProducts = defineStore("Products", () => {
         console.log("GET", response);
         allProductData.value.data.content = response._data.content;
         allProductData.value.data.pageable = response._data.pageable;
+        
       },
     });
   }
@@ -147,6 +148,18 @@ export const useProducts = defineStore("Products", () => {
     });
   }
 
+  async function deleteProduct(id){
+    const { data } = await $fetch(`${config.public.apiBase}/Product/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token.value.access_token}`,
+      },
+      onResponse({ request, response, options }) {
+        console.log("Delete", response);
+      },
+    });
+  }
+
   return {
     getProduct,
     allProductData,
@@ -158,5 +171,6 @@ export const useProducts = defineStore("Products", () => {
     editProductBody,
     productDataDetail,
     getProductById,
+    deleteProduct
   };
 });

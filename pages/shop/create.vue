@@ -22,6 +22,7 @@
 
         <v-text-field
           v-model="desc"
+          :rules="ruleDesc"
           label="Description"
           variant="solo"
           rounded
@@ -79,9 +80,14 @@ const ruleName = ref([
   //   (v && v.length >= 8) || "Name must be more than 8 characters",
 ]);
 
+const ruleDesc = ref([
+  (v: string) => !!v || "Description is required",
+]);
+
 const isSubmitDisabled = computed(() => {
   const nameValid = ruleName.value.every(rule => rule(name.value) === true);
-  return !nameValid;
+  const descValid = ruleDesc.value.every(rule => rule(desc.value) === true);
+  return !nameValid || !descValid;
 });
 
 async function submit() {

@@ -51,7 +51,7 @@
           Edits
         </v-btn>
       </NuxtLink>
-      <v-btn type="submit" variant="outlined"> delete </v-btn>
+      <v-btn type="submit" variant="outlined" @click.stop="deleteProduct(Number(data.productId))"> delete </v-btn>
     </v-card>
   </v-card>
 </template>
@@ -74,6 +74,8 @@ defineProps({
   },
 });
 
+const product = useProducts();
+
 const token = ref();
 
 const disableAdd = ref(true);
@@ -88,4 +90,10 @@ onBeforeMount(async () => {
   }
 });
 
+async function deleteProduct(id: number){
+  // const deleteProduct = 
+  // const productData = 
+  await product.deleteProduct(id);
+  await product.getProduct();
+}
 </script>

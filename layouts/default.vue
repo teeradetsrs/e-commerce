@@ -10,9 +10,9 @@
           <v-btn> My Shop </v-btn>
         </NuxtLink>
 
-        <!-- <v-btn>
-          <NuxtLink to="/shop/create" no-rel> Create Shop </NuxtLink>
-        </v-btn> -->
+        <NuxtLink to="/chat" no-rel>
+          <v-btn> Chat </v-btn>
+        </NuxtLink>
 
         <v-spacer></v-spacer>
 
@@ -27,9 +27,8 @@
         </template>
 
         <template v-if="auth.statusLogin">
-            <v-btn @click="logout()"> Logout </v-btn>
+          <v-btn @click="logout()"> Logout </v-btn>
         </template>
-
       </v-app-bar>
 
       <v-main class="tw-bg-indigo-400">
@@ -48,17 +47,17 @@ const drawer = ref(false);
 
 const auth = useAuthentication();
 
-onBeforeMount( async () => {
-  const token = localStorage.getItem("access_token")
-  
-  if(token != null){
-    auth.statusLogin = true
+onBeforeMount(async () => {
+  const token = localStorage.getItem("access_token");
+
+  if (token != null) {
+    auth.statusLogin = true;
   }
-})
+});
 
 async function logout() {
-  localStorage.clear()
-  auth.statusLogin = false
+  localStorage.clear();
+  auth.statusLogin = false;
   navigateTo("/login");
 }
 </script>

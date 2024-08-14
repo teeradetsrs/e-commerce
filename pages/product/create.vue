@@ -50,6 +50,7 @@
           :rules="rulePrice"
           variant="solo"
           rounded
+          type="number"
         ></v-text-field>
 
         <v-text-field
@@ -58,6 +59,7 @@
           :rules="ruleStock"
           variant="solo"
           rounded
+           type="number"
         ></v-text-field>
 
         <div class="tw-grid tw-place-content-center">
@@ -85,8 +87,8 @@ const shopId = ref(1);
 const name = ref('');
 const description = ref('');
 const image = ref();
-const price = ref(0);
-const stock = ref(0);
+const price = ref();
+const stock = ref();
 const imagesBase64 = ref("");
 
 const ruleUsername = ref([
