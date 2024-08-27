@@ -20,7 +20,7 @@ export const useSignalr = defineStore("Signalr", () => {
   async function startConnection() {
     try {
       connection.value = new signalR.HubConnectionBuilder()
-        .withUrl("http://192.168.0.97:7098/api/chat")
+        .withUrl("http://192.168.1.73:7098/api/chat")
         .configureLogging(signalR.LogLevel.Information)
         .build();
 

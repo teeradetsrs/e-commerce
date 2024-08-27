@@ -5,13 +5,12 @@
   <div>
     <div class="tw-grid tw-grid-cols-6">
       <div class="tw-col-start-5  tw-justify-self-end ">
-        <NuxtLink to="/shop/create" no-rel v-if="!disableAdd">
+        <NuxtLink to="/shop/create" no-rel >
           <v-btn
             prepend-icon="mdi-plus-thick"
             class="tw-w-full"
             :loading="loading"
             type="submit"
-            :disabled="disableAdd"
           >
             <template v-slot:prepend>
               <v-icon color="success"></v-icon>
